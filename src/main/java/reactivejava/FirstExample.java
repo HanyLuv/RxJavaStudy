@@ -13,34 +13,51 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 import io.reactivex.Observable;
-
+import io.reactivex.Single;
+import io.reactivex.functions.Consumer;
 
 public class FirstExample {
-	
-	public static void main(String[] args) {
 
+	public static void main(String[] args) {
 		
-		//Java5 에서 추가된 동시성 API Callable 인터페이스..
-		Callable<String> callable = ()->{ //비동기 싱행후 결과를 반환하는 call() 메소드 정의.
-			Thread.sleep(1000);
-			return "Hello Callable"; //실행결과 리턴
+		//1. 기존 Observable에서 Single객체로 변환하기
+		Observable<String> source = Observable.just("Hello Single!");
+		Single.fromObservable(source).subscribe(data->
+		 System.out.println(data)
+		);
+		
+		
+		//2. Single 함수를 호출해 Single 객체 생성하기
+		Observable.just("Hello Single~","ㄸㄷㄷ")
+		.single("default item") //값이 발행되지 않을때에 해당값을 넣어 발행해줌
+		.subscribe(System.out::println);
+		
+		
+		//3. First() 함수를 호출해 Single 객체 생성하기
+		//여러개의 데이터를 발행 할 수 있는 Observable을Single객체로 변환한것.
+		String[] color = {"red",
+				"orenge",
+				"green"
 		};
 		
-		Observable<String> source = Observable.fromCallable(callable);
-		source.subscribe(System.out::println);
+		Observable.fromArray(color)
+		.first("default value")
+		.subscribe(System.out::println);
 		
 		
 		
-		//비동기 계산의 결과를 구할때 사용.
-		// 1. Executor 인터페이스를 구현한 클래스에 (이경우 newSingleThreadExecutor()는 ExecutorService를 리턴함.)
-		// 2. Callable인자를 넣어
-		// 3. Future 반환. (submit())
-		Future<String> future = Executors.newSingleThreadExecutor().submit(()->{
-			Thread.sleep(1000);
-			return "Hello future";
-		});
-		Observable<String> futureSource = Observable.fromFuture(future);
-		futureSource.subscribe(System.out::println);
+		//4. empty Observable에서 Single 객체 생성하기
+		Observable.empty()
+		.single("default value")
+		.subscribe(System.out::println);
 		
-	}
+		
+		
+		//5. take()함수에서 Single객체 생성하기
+		Observable.just(new User("hany"), new User("mongmang")).take(1)
+		.single(new User("default name"))
+		.subscribe(System.out::println);
+		
+		/**!! Single은 데이터 한개만 발행!! */
+		}
 }
