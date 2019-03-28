@@ -2,27 +2,19 @@ package reactivejava;
 
 import io.reactivex.subjects.AsyncSubject;
 import io.reactivex.subjects.BehaviorSubject;
+import io.reactivex.subjects.PublishSubject;
 
 public class FirstExample {
 
 	public static void main(String[] args) {
-			AsyncSubject<String> subject = AsyncSubject.create();
-			subject.subscribe(data -> System.out.println("Subscriber #1 => "+data));
-			subject.onNext("hany");
-			subject.onNext("end");
-//			subject.onComplete();	// Observable°ú ¸¶Âù°¡Áö·Î È£Ãâ ÀÌÈÄ¿£ onNext()¸¦ ¹«½ÃÇÑ´Ù.
-			subject.subscribe(data -> System.out.println("Subscriber #2 => "+data));
-			subject.subscribe(data -> System.out.println("Subscriber #3 => "+data));
 			
-			
-			BehaviorSubject<String> behavior = BehaviorSubject.createDefault("default");
-			behavior.subscribe(data -> System.out.println("Subscriber #1 => "+data));
-			behavior.onNext("1");
-			behavior.onNext("2");
-//			behavior.onComplete(); ÀÌ ¾Æ·¡ºÎÅÍ ¹«½ÃµÈ´Ù. AsyncSubject¿Í ´Ù¸£°Ô onComplete¸¦ ÇÏÁö¾Ê¾Æµµ ±¸µ¶ÀÚ¿¡°Ô µ¥ÀÌÅÍ°¡ º¯°æµÇ¸é ÀÌº¥Æ®¸¦ º¸³½´Ù.
-									//Hot Observable ÀÌ¹Ç·Î ´ç¿¬ÇÑ°ÍÀÎ°Å °°´Ù '¤µ')/
-			behavior.subscribe(data -> System.out.println("Subscriber #2 => "+data));
-			behavior.onNext("5");
-			
+		PublishSubject<String> publishSubject = PublishSubject.create();
+		publishSubject.subscribe(data-> System.out.println("Subscribe #1 => "+ data)); //í•´ë‹¹í•¨ìˆ˜ í˜¸ì¶œí•´ì•¼ ê°’ì„ ë°œí–‰í•˜ê¸° ì‹œìž‘í•¨.
+		publishSubject.onNext("1");
+
+		publishSubject.subscribe(data-> System.out.println("Subscribe #2 => "+ data)); 
+		publishSubject.onNext("2");
+		publishSubject.onComplete();
+
 	}
 }
