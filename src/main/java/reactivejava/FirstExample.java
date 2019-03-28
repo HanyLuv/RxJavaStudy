@@ -3,18 +3,19 @@ package reactivejava;
 import io.reactivex.subjects.AsyncSubject;
 import io.reactivex.subjects.BehaviorSubject;
 import io.reactivex.subjects.PublishSubject;
+import io.reactivex.subjects.ReplaySubject;
 
 public class FirstExample {
 
 	public static void main(String[] args) {
 			
-		PublishSubject<String> publishSubject = PublishSubject.create();
-		publishSubject.subscribe(data-> System.out.println("Subscribe #1 => "+ data)); //해당함수 호출해야 값을 발행하기 시작함.
-		publishSubject.onNext("1");
-
-		publishSubject.subscribe(data-> System.out.println("Subscribe #2 => "+ data)); 
-		publishSubject.onNext("2");
-		publishSubject.onComplete();
-
+	ReplaySubject<String> subject = ReplaySubject.create();
+//	subject.subscribe(data -> System.out.println("Subscribe #1 => "+data ));
+	subject.onNext("1");
+	subject.subscribe(data -> System.out.println("Subscribe #1 => "+data ));
+	subject.onNext("2");
+	subject.subscribe(data -> System.out.println("Subscribe #2 => "+data ));
+	subject.onNext("3");
+	subject.subscribe(data -> System.out.println("Subscribe #3 => "+data ));
 	}
 }
