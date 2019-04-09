@@ -1,21 +1,44 @@
 package reactivejava;
 
+import java.util.Scanner;
+
 import io.reactivex.Observable;
-import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 
 public class FirstExample {
 
 	public static void main(String[] args) {
 	
-			//flatMap() 결과값이 Observable 이므로 여러개의 데이터를 발행 할수있음 !!
+		Scanner in = new Scanner(System.in);
+		System.out.println("구구단 Input:");
+		int dan = Integer.parseInt(in.nextLine());
+		for(int row = 1, end = 9 ;row <=end ; ++row) {
+			System.out.println(dan+ " * "+ row  + " = " + dan * row);
+		}
 		
-		Function<String, Observable<String>> getDiamonds = ball -> Observable.just(ball+"<>",ball+"<>");
+		//값이 들어오면 곱해서 저장해야해
+		//map은 들어온값을 원하는 형태로 가공할수있다 ㅇㅁㅇ 
+		//flatMap()으로 변경해보자
+				
 		
-		String[] balls = {"1","3","5"};
-//		Observable<String> source = Observable.fromArray(balls).flatMap(getDiamonds);
-		Observable<String> source = Observable.fromArray(balls).flatMap(ball -> Observable.just(ball+"<>",ball+"<>")); //인라인
-		source.subscribe(System.out::println);
+		Function<Integer, Observable<String>> funGugudan = value -> {
+			return Observable.just(value + " * "+ 1  + " = " + value * 1,
+					value + " * "+ 2  + " = " + value * 2,
+					value + " * "+ 3  + " = " + value * 3,
+					value + " * "+ 4  + " = " + value * 4,
+					value + " * "+ 5  + " = " + value * 5,
+					value + " * "+ 6  + " = " + value * 6,
+					value + " * "+ 7  + " = " + value * 7,
+					value + " * "+ 8  + " = " + value * 8,
+					value + " * "+ 9  + " = " + value * 9
+					);
+		};
+				
+
+		Observable<String> observable = Observable.just(dan).flatMap(funGugudan);
+		observable.subscribe(System.out::println);
+				
+		
 		
 		
 	}
